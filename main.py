@@ -1,8 +1,9 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from openai import OpenAI
 
 app = FastAPI()
+client = OpenAI()
 
 @app.get("/")
 def instant():
@@ -11,7 +12,6 @@ def instant():
 
 @app.get("/openai", response_class=HTMLResponse)
 def open_ai():
-    client = OpenAI()
     message = """
         ¡Estás en un sitio web que acaba de entrar en producción por primera vez!
         Por favor, responde con un anuncio entusiasta para dar la bienvenida a los visitantes, explicando que el sitio está en producción por primera vez.
@@ -21,3 +21,11 @@ def open_ai():
     reply = response.choices[0].message.content.replace("\n", "<br/>")
     html = f"<html><head><title>¡En vivo al instante!</title></head><body><p>{reply}</p></body></html>"
     return html
+
+
+@app.get("/ideas", response_class=PlainTextResponse)
+def open_ai_ideas():
+    messages = [{"role": "user", "content": "Genera nuevas ideas de negocio para agentes de IA"}]
+    response = client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+
+    return response.choices[0].message.content
