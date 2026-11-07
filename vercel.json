@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "instant.py",
+            "src": "main.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "instant.py"
+            "dest": "main.py"
         }
     ]
 }
